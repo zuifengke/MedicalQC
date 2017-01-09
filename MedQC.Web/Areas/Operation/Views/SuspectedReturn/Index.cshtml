@@ -1,0 +1,333 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Operation/Views/Shared/_Layout.cshtml";
+}
+<body>
+    <form id="form_list" name="form_list" method="post">
+        <table id="datagrid"></table>
+        <div id="toolbar">
+            <div style="padding-left:5px;padding-top:5px;padding-bottom:5px;">
+                手术日期：
+                <input class="easyui-datetimebox" name="begintime"
+                       data-options="required:true,showSeconds:false,formatter:myformatter,parser:myparser" value="" style="width:100px">
+                -
+                <input class="easyui-datetimebox" name="endtime"
+                       data-options="required:true,showSeconds:false,formatter:myformatter,parser:myparser" value="" style="width:100px">
+                <input id="Name" name="Name" style="width:250px;margin:20px;" data-options="label:'手术名称:'" class="easyui-textbox" type="text" />
+                <input id="Name" name="Name" style="width:250px;margin:20px;" data-options="label:'第一术者:'" class="easyui-textbox" type="text" />
+                <a href="#" onclick="manage.search()"
+                   id="btnSearch" class="easyui-linkbutton" iconcls="icon-search" plain="true">查询</a>
+            </div>
+            <div style="text-align:left;">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="manage.confirm()">确定</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" onclick="return manage.saveExcel()" iconCls="icon-excel" plain="true" title="">导出excel文件</a>
+            </div>
+        </div>
+    </form>
+    <div id="dialog" class="easyui-dialog" title="新增" style="width: 300px; height: 180px;"
+         modal="true" closed="true" buttons="#dialog-buttons" maximizable="true" resizable="true">
+        <form id="form" class="easyui-form" method="post">
+            <div style="padding:5px 10px 0 10px;">
+                <input class="easyui-combobox" id="COMPLICATION" name="COMPLICATION" style="width:100%" data-options="label:'并发症:'">
+            </div>
+            <div style="padding:5px 10px 0 10px;">
+                <input class="easyui-textbox" name="Memo" style="width:100%" data-options="label:'备注:'">
+            </div>
+            <div >
+                <input type="hidden" name="PATIENT_ID"/>
+                <input type="hidden" name="VISIT_ID" />
+            </div>
+        </form>
+    </div>
+    <div id="dialog-buttons">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="manage.saveScOperation()" style="width:90px">保存</a>
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-cancel" onclick="javascript: $('#dialog').dialog('close')" style="width:90px">关闭</a>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            manage.initData();
+            $("#dialog").dialog({
+                onClose: function () {
+                    //$("#datagrid").datagrid("reload");
+                }
+            });
+        });
+        var url;
+        var manage = {
+
+            openWin: function () {
+                
+                $("#edit").dialog("open");
+                $("#edit-buttons a:first").attr("onclick", "manage.add(0); return false;")
+            },
+            insert: function () {
+                $('#dialog').dialog('open').dialog('center').dialog('setTitle', '新增');
+                $('#form').form('clear');
+                url = '/sysconfig/sysRole/insert';
+            },
+            confirm: function () {
+                manage.initComplicationTypeCombo();
+                var row = $('#datagrid').datagrid('getSelected');
+                if (row) {
+                    $('#dialog').dialog('open').dialog('center').dialog('setTitle', '疑似患者确定为二次手术');
+
+                    $("#form1").form("clear");
+                    //$.post("/sysconfig/sysRole/GetDetail", { "id": row.ID }, function (data) {
+                        $("#form").form('load', row);
+                    //});
+                    //url = '/operation/SuspectedReturn/Save';
+                }
+                //$('#dialog').dialog('open').dialog('center').dialog('setTitle', '疑似患者确定为二次手术');
+            },
+            saveScOperation: function () {
+                var json = this.getInputData('edit', 'submit');
+                $('#form').form('submit', {
+                    url: '/operation/SuspectedReturn/Save',
+                    data: json,
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        var result = eval('(' + result + ')');
+                        $.messager.show({
+                            title: '提示',
+                            msg: result.message,
+                            timeout: 5000,
+                            showType: 'slide',
+                            fn: function () {
+                               
+                            }
+                        });
+                        if (result.status == 'success') {
+                            $('#dialog').dialog('close');
+                            manage.removeRows();
+                        }
+                    }
+                });
+            },
+            initComplicationTypeCombo: function () {
+                $("#COMPLICATION").combobox({
+                    valueField: "ID",
+                    textField: "Name",
+                    multiple: false,
+                    panelHeight: "auto",
+                    editable: false,
+                    url: '/operation/SuspectedReturn/GetComplicationTypeComboJson'
+                })
+            },
+            update: function () {
+                var row = $('#datagrid').datagrid('getSelected');
+                if (row) {
+                    $('#dialog').dialog('open').dialog('center').dialog('setTitle', '编辑');
+
+                    $("#form1").form("clear");
+                    $.post("/sysconfig/sysRole/GetDetail", { "id": row.ID }, function (data) {
+
+                        $("#form").form('load', data);
+                    });
+                    url = '/sysconfig/sysRole/update?id=' + row.ID;
+                }
+            },
+            save: function () {
+                var json = this.getInputData('edit', 'submit');
+                $('#form').form('submit', {
+                    url: url,
+                    data: json,
+                    onSubmit: function () {
+                        return $(this).form('validate');
+                    },
+                    success: function (result) {
+                        var result = eval('(' + result + ')');
+                        $.messager.show({
+                            title: '提示',
+                            msg: result.message,
+                            timeout: 5000,
+                            showType: 'slide',
+                            fn: function () {
+                               
+                            }
+                        });
+                        if (result.message.indexOf("成功") > 0) {
+                            url = "/sysconfig/sysRole/update?id=" + result.id;
+                            $('#dialog').dialog('setTitle', '编辑');
+                        }
+                    }
+                });
+            },
+            removeRows: function () {
+                var row = $('#datagrid').datagrid("getSelected");
+                var patientid = row.PATIENT_ID;
+                var visitid = row.VISIT_ID;
+                var rows = $('#datagrid').datagrid("getRows");
+                var copyRows = [];
+                for (var j = 0; j < rows.length; j++) {
+                    if (rows[j].PATIENT_ID == patientid && rows[j].VISIT_ID==visitid)
+                    {
+                        copyRows.push(rows[j]);
+                    }
+                }
+                for (var i = 0; i < copyRows.length; i++) {
+                    var index = $('#datagrid').datagrid('getRowIndex', copyRows[i]);
+                    $('#datagrid').datagrid('deleteRow', index);
+                }
+            },
+            delRefresh: function () {
+                var ids = "";
+                $($('#datagrid').datagrid('getSelections')).each(function () {
+                    ids += this.ID + ",";
+                });
+                ids = ids.substr(0, ids.length - 1);
+                if (ids == "") {
+                    $.messager.alert('提示', '请选择要删除的数据！', 'info');
+                    return;
+                }
+                $.messager.confirm('删除提醒', '确定要删除选中的项吗？', function (r) {
+                    if (r) {
+                        $.post('/sysconfig/sysRole/delete', { ids: ids }, function (result) {
+                            if (result.success) {
+                                $('#datagrid').datagrid('reload');    // reload the Role data
+                                $('#datagrid').datagrid('clearSelections');
+                            } else {
+                                $.messager.show({    // show error message
+                                    title: '执行结果',
+                                    msg: result.errorMsg
+                                });
+                            }
+                        }, 'json');
+                    }
+                });
+            },
+            getInputData: function (id, cmd) {
+                var postdata = "{ \"action\":\"" + cmd + "\",";
+                $("#" + id + " input[type!='checkbox']").each(function () {
+                    postdata += "\"" + $(this).attr("name") + "\":\"" + $(this).val() + "\",";
+                });
+                $("#" + id + " input[type='checkbox']").each(function () {
+                    postdata += "\"" + $(this).attr("name") + "\":\"" + this.checked + "\",";
+                });
+                postdata = postdata.substr(0, postdata.length - 1);
+                postdata += "}";
+                return eval("(" + postdata + ")");
+            },
+            refresh: function () {
+                manage.initData();
+            },
+            initData: function () {
+                manage.initGrid();
+            },
+            mergeCellsByField: function (tableID, colList, mainColIndex1, mainColIndex2) {
+                var ColArray = colList.split(",");
+                var tTable = $('#' + tableID);
+                var TableRowCnts = tTable.datagrid("getRows").length;
+                var tmpA;
+                var tmpB;
+                var PerTxt = "";
+                var CurTxt = "";
+                var alertStr = "";
+                for (var i = 0; i <= TableRowCnts ; i++) {
+                    if (i == TableRowCnts) {
+                        CurTxt = "";
+                    }
+                    else {
+                        CurTxt = tTable.datagrid("getRows")[i][ColArray[mainColIndex1]] + "_" + tTable.datagrid("getRows")[i][ColArray[mainColIndex2]];
+                    }
+                    if (PerTxt == CurTxt) {
+                        tmpA += 1;
+                    }
+                    else {
+                        tmpB += tmpA;
+                        for (var j = 0; j < ColArray.length; j++) {
+                            tTable.datagrid('mergeCells', {
+                                index: i - tmpA,
+                                field: ColArray[j],
+                                rowspan: tmpA,
+                                colspan: null
+                            });
+                        }
+                        tmpA = 1;
+                    }
+                    PerTxt = CurTxt;
+                }
+            },
+            saveExcel: function () {//导出Excel文件
+                //getExcelXML有一个JSON对象的配置，配置项看了下只有title配置，为excel文档的标题
+                var data = $('#datagrid').datagrid('getExcelXml', { title: 'datagrid import to excel' }); //获取datagrid数据对应的excel需要的xml格式的内容
+                //用ajax发动到动态页动态写入xls文件中
+                var url = '/Handler/datagrid-to-excel.ashx'; //如果为asp注意修改后缀
+                $.ajax({
+                    url: url, data: { data: data }, type: 'POST', dataType: 'text',
+                    success: function (fn) {
+                        alert('导出excel成功！');
+                        window.location = fn; //执行下载操作
+                    },
+                    error: function (xhr) {
+                        alert('动态页有问题\nstatus：' + xhr.status + '\nresponseText：' + xhr.responseText)
+                    }
+                });
+                return false;
+            },
+            initGrid: function () {
+                $('#datagrid').datagrid({
+                    title: '', //表格标题
+                    sortName: 'ID', //排序字段
+                    idField: 'ID', //标识字段,主键
+                    iconCls: '', //标题左边的图标
+                    
+                    width: '100%', //宽度
+                    singleSelect: true,
+                    height: $(parent.document).find("#tabs").height() - 30 > 0 ? $(parent.document).find("#tabs").height() - 30 : 300, //高度
+                    nowrap: false, //是否换行，True 就会把数据显示在一行里
+                    //striped: true, //True 奇偶行使用不同背景色
+                    collapsible: false, //可折叠
+                    sortOrder: 'desc', //排序类型
+                    remoteSort: true, //定义是否从服务器给数据排序
+                    frozenColumns: [[//冻结的列，不会随横向滚动轴移动
+                        { field: 'cbx', checkbox: true }
+                    ]],
+                    columns: [[
+                        {
+                            title: '', field: 'ID', width: 150, hidden: true
+                        },
+                        { title: '所在科室', field: 'DEPT_NAME', width: 120 },
+                        { title: '姓名', field: 'NAME', width: 80 },
+                        { title: '患者ID号', field: 'PATIENT_ID', width: 100 },
+                        { title: '入院次', field: 'VISIT_ID', width: 60 },
+                        { title: '性别', field: 'SEX', width: 60 },
+                        { title: '年龄', field: 'AGE', width: 60 },
+                        { title: '手术序号', field: 'OPER_ID', width: 80 },
+                        { title: '手术名称', field: 'OPERATION_NAME', width: 300 },
+                        {
+                            title: '手术时间', field: 'START_DATE_TIME', type: 'DateTime', width: 120
+                            , formatter: function (value, rec) {
+                                if (value == null)
+                                    return value;
+                                var date = new Date(parseInt(value.substr(6)));
+                                return date.format("yyyy-MM-dd hh:mm");
+                            }
+                        },
+                        { title: '持续时间', field: 'CONTINUED_TIMESPAN', width: 150 },
+                        { title: '手术等级', field: 'OPERATION_SCALE', width: 150 },
+                        { title: '第一术者', field: 'SURGEON', width: 150 },
+                        { title: '麻醉方式', field: 'ANESTHESIA_METHOD', width: 150 },
+                        { title: '病情说明', field: 'PATIENT_CONDITION', width: 200 },
+                        { title: '入院主诊断', field: 'DIAGNOSIS_DESC', width: 200 },
+                        { title: '住院天数', field: 'INPDAYS', width: 200 }
+                    ]],
+                    toolbar: "#toolbar",
+                    queryParams: { "action": "query" },
+                    onLoadSuccess: function (data) {
+                        
+                        manage.mergeCellsByField("datagrid", "PATIENT_ID,VISIT_ID,NAME,DEPT_NAME,SEX,AGE", 0, 1);
+                    },
+                    rownumbers: true //行号
+                });
+            },
+            search: function () {
+                $('#datagrid').datagrid('options').queryParams.Name = $("#Name").val();
+                $('#datagrid').datagrid({ url: '/Operation/SuspectedReturn/QueryData' });
+                //$("#datagrid").datagrid("reload");
+                $("#datagrid").datagrid("clearChecked");
+            }
+        }
+    </script>
+</body>

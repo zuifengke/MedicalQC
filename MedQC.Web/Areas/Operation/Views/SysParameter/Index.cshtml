@@ -1,0 +1,299 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/Operation/Views/Shared/_Layout.cshtml";
+    var parameters = ViewBag.parameters as List<MedQC.Web.Models.SysParameter>;
+    var operation_name_keys = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.operation_name_keys).FirstOrDefault();
+    var operation_keys_count = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.operation_keys_count).FirstOrDefault();
+    var filtering_characters = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.filtering_characters).FirstOrDefault();
+    var complication_type = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.complication_type).FirstOrDefault();
+    var complication_keys = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.complication_keys).FirstOrDefault();
+    var medical_history_problem = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.medical_history_problem).FirstOrDefault();
+    var operation_days = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.operation_days).FirstOrDefault();
+    var order_keywords = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.order_keywords).FirstOrDefault();
+    var patients_return_reason = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.patients_return_reason).FirstOrDefault();
+    var post_operative_warning_days = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.post_operative_warning_days).FirstOrDefault();
+    var temperature_degree = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.temperature_degree).FirstOrDefault();
+    var warning_condition = parameters.Where(m => m.Code == MedQC.Web.SystemConst.OperationParameter.warning_condition).FirstOrDefault();
+
+}
+
+<div>
+    <div class="easyui-panel" style="width:100%;height:500px"
+         title="" data-options="iconCls:'icon-ok',tools:'#tt'">
+        <form id="form" method="post">
+            <div class="easyui-panel" title="二次手术判断条件设置：" style="width:100%;border:0px; padding:10px 10px  10px 10px;background-color:#F5F9FD">
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="operation_name_keys" style="width:800px" value="@if (operation_name_keys!=null){ @Html.Raw(operation_name_keys.Value) }" data-options="label:'手术名称中包含',required:true,labelWidth:100">
+                    <label>关键字（多个关键字以","分割，例如“瘘,漏,血肿”）</label>
+                </div>
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="operation_keys_count" value="@if (operation_keys_count!=null){ @Html.Raw(operation_keys_count.Value) }" style="width:200px" data-options="label:'手术名称中',required:true,labelWidth:100">
+                    个字符一致
+                </div>
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="filtering_characters" value="@if (filtering_characters!=null){ @Html.Raw(filtering_characters.Value) }" style="width:800px" data-options="label:'过滤字符',required:true,labelWidth:100,multiline:true">
+                </div>
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="complication_type" value="@if (complication_type!=null){ @Html.Raw(complication_type.Value) }" style="width:800px;height:60px" data-options="label:'并发症类型',required:true,labelWidth:100,multiline:true">
+                </div>
+            </div>
+            <div class="easyui-panel" title="出院疑似并发症判断条件设置：" style="width:100%;border:0px; padding:10px;background-color:#F5F9FD">
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="complication_keys" value="@if (complication_keys!=null){ @Html.Raw(complication_keys.Value) }" style="width:800px" data-options="label:'并发症关键字',required:true,labelWidth:100">
+                </div>
+            </div>
+            <div class="easyui-panel" title="重返指标相关参数：" style="width:100%;border:0px; padding:10px;background-color:#F5F9FD">
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="patients_return_reason" value="@if (patients_return_reason!=null){ @Html.Raw(patients_return_reason.Value) }" style="width:800px" data-options="label:'患者重返原因',required:true,labelWidth:100">
+                </div>
+            </div>
+            <div class="easyui-panel" title="二次手术预警判断条件设置：" style="width:100%;border:0px; padding:10px;background-color:#F5F9FD">
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="warning_condition" value="@if (warning_condition!=null){ @Html.Raw(warning_condition.Value) }" style="width:800px" data-options="label:'预警条件',required:true,labelWidth:100">
+                </div>
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="medical_history_problem" value="@if (medical_history_problem!=null){ @Html.Raw(medical_history_problem.Value) }" style="width:800px" data-options="label:'病历问题',required:true,labelWidth:100,multiline:true">
+                </div>
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="order_keywords" value="@if (order_keywords!=null){ @Html.Raw(order_keywords.Value) }" style="width:800px" data-options="label:'医嘱关键字',required:true,labelWidth:100">
+                </div>
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="operation_days" value="@if (operation_days!=null){ @Html.Raw(operation_days.Value) }" style="width:100px" data-options="label:'手术',required:true,labelWidth:40">
+                    <label>天后体温大于</label>
+                    <input class="easyui-textbox" name="temperature_degree" value="@if (temperature_degree!=null){ @Html.Raw(temperature_degree.Value) }" style="width:60px" data-options="label:'',required:true,labelWidth:0">
+                    <label>度则预警</label>
+                </div>
+                <div style="padding:5px;">
+                    <input class="easyui-textbox" name="post_operative_warning_days" value="@if (post_operative_warning_days!=null){ @Html.Raw(post_operative_warning_days.Value) }" style="width:200px" data-options="label:'手术后预警天数',required:true,labelWidth:100">
+                </div>
+
+            </div>
+            <div class="easyui-panel" title="二次手术预警病历过滤条件:" style="width:100%;border:0px; padding:10px;background-color:#F5F9FD">
+                <table id="dg" title=""></table>
+
+                <div id="tb" style="height:auto">
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-add',plain:true" onclick="manage.append()">新增</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-remove',plain:true" onclick="manage.removeit()">删除</a>
+                    <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" onclick="manage.saveGrid()">保存</a>
+                    @*<a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-search',plain:true" onclick="manage.getChanges()">GetChanges</a>*@
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div id="tt">
+        <a href="javascript:void(0)" class="easyui-linkbutton c6" iconCls="icon-ok" onclick="manage.save()" style="width:90px">保存</a>
+
+    </div>
+</div>
+<script>
+    var parameter = function () {
+        this.ID = "";
+        this.Code = "";
+        this.Name = "";
+        this.Value = "";
+        this.Status = "";
+    }
+    $(function () {
+        manage.initGrid();
+    });
+    var editIndex = undefined;
+    var manage = {
+        initGrid: function () {
+            $('#dg').datagrid({
+                title: '', //表格标题
+                url: "/operation/sysparameter/querydata?code=@MedQC.Web.SystemConst.OperationParameter.two_surgical_early_warning_medical_records_filtering", //请求数据的页面
+                width: 500, //宽度
+                singleSelect: true,
+                height: 400, //高度
+                //frozenColumns: [[//冻结的列，不会随横向滚动轴移动
+                //    { field: 'cbx', checkbox: true }
+                //]],
+                columns: [[
+                    {
+                        title: '', field: 'ID', width: 200, hidden: true
+                    },
+                    { title: '关键字', field: 'Code', width: 200, editor: 'textbox' },
+                    { title: '关键字排斥前缀', field: 'Value', width: 260, editor: 'textbox' }
+
+                ]],
+                iconCls: 'icon-edit',
+                onClickCell: manage.onClickCell,
+                onEndEdit: manage.onEndEdit,
+                toolbar: "#tb",
+                rownumbers: true, //行号
+                striped: true, //True 奇偶行使用不同背景色
+            });
+        },
+        endEditing: function () {
+            if (editIndex == undefined) { return true }
+            if ($('#dg').datagrid('validateRow', editIndex)) {
+                $('#dg').datagrid('endEdit', editIndex);
+                editIndex = undefined;
+                return true;
+            } else {
+                return false;
+            }
+        },
+        onClickCell: function (index, field) {
+            if (editIndex != index) {
+                if (manage.endEditing()) {
+                    $('#dg').datagrid('selectRow', index)
+                            .datagrid('beginEdit', index);
+                    var ed = $('#dg').datagrid('getEditor', { index: index, field: field });
+                    if (ed) {
+                        ($(ed.target).data('textbox') ? $(ed.target).textbox('textbox') : $(ed.target)).focus();
+                    }
+                    editIndex = index;
+                } else {
+                    setTimeout(function () {
+                        $('#dg').datagrid('selectRow', editIndex);
+                    }, 0);
+                }
+            }
+        },
+        onEndEdit: function (index, row) {
+            //var ed = $(this).datagrid('getEditor', {
+            //    index: index,
+            //    field: 'productid'
+            //});
+            //row.productname = $(ed.target).combobox('getText');
+        },
+        getChanges: function () {
+            manage.endEditing();
+            //var rows = $('#dg').datagrid('getChanges');
+            //for (var i = 0; i < rows.length; i++) {
+            //    alert(rows[i].ID + rows[i].Code + rows[i].Value+rows[i].status);
+            //}
+
+            //alert(rows.length + ' rows are changed!');
+            var rows = $('#dg').datagrid('getChanges', 'deleted');
+            for (var i = 0; i < rows.length; i++) {
+                alert(rows[i].ID + rows[i].Code + rows[i].Value);
+            }
+            alert(rows.length + ' rows are deleted!');
+
+            rows = $('#dg').datagrid('getChanges', 'updated');
+            alert(rows.length + ' rows are updated!');
+
+
+            rows = $('#dg').datagrid('getChanges', 'inserted');
+            alert(rows.length + ' rows are inserted!');
+
+            $('#dg').datagrid('reload');
+
+        },
+        saveGrid: function () {
+            manage.endEditing();
+            var list;
+            //新增
+            rows = $('#dg').datagrid('getChanges', 'inserted');
+            for (var i = 0; i < rows.length; i++) {
+                rows[i].ID = "0";
+                var s = this.getJson(rows[i],"insert");
+                if (list == undefined)
+                    list = s;
+                else
+                    list = list + "," + s;
+            }
+            //修改
+            rows = $('#dg').datagrid('getChanges', 'updated');
+            for (var i = 0; i < rows.length; i++) {
+                var p = new parameter();
+                var s = this.getJson(rows[i], "update");
+                if (list == undefined)
+                    list = s;
+                else
+                    list = list + "," + s;
+            }
+            //删除
+            rows = $('#dg').datagrid('getChanges', 'deleted');
+            for (var i = 0; i < rows.length; i++) {
+                var p = new parameter();
+                var s = this.getJson(rows[i], "delete");
+                if (list == undefined)
+                    list = s;
+                else
+                    list = list + "," + s;
+            }
+            if (list == undefined)
+                return;
+            list = "[" + list + "]";
+            $.ajax({
+                type: 'post',
+                url: "/operation/sysparameter/savegrid",
+                dataType: 'text',
+                data: {
+                    "list": list
+                },
+                success: function (data) {
+                    $('#dg').datagrid('acceptChanges');
+                    $('#dg').datagrid('reload');
+                }
+            });
+           
+        },
+        getJson:function(row,status){
+            var s = "{\"ID\":\"" + row.ID + "\",\"Code\":\"" + row.Code + "\",\"Value\":\"" + row.Value + "\",\"Status\":\"" + status + "\"}";
+            return s;
+        },
+        accept: function () {
+            if (endEditing()) {
+                $('#dg').datagrid('acceptChanges');
+            }
+        },
+        append: function () {
+            if (manage.endEditing()) {
+                $('#dg').datagrid('appendRow', {});
+                editIndex = $('#dg').datagrid('getRows').length - 1;
+                $('#dg').datagrid('selectRow', editIndex)
+                        .datagrid('beginEdit', editIndex);
+            }
+        },
+        removeit: function () {
+            if (editIndex == undefined) { return }
+            $('#dg').datagrid('cancelEdit', editIndex)
+                    .datagrid('deleteRow', editIndex);
+            editIndex = undefined;
+        },
+        getInputData: function (id, cmd) {
+            var postdata = "{ \"action\":\"" + cmd + "\",";
+            $("#" + id + " input[type!='checkbox']").each(function () {
+                postdata += "\"" + $(this).attr("name") + "\":\"" + $(this).val() + "\",";
+            });
+            $("#" + id + " input[type='checkbox']").each(function () {
+                postdata += "\"" + $(this).attr("name") + "\":\"" + this.checked + "\",";
+            });
+            postdata = postdata.substr(0, postdata.length - 1);
+            postdata += "}";
+            return eval("(" + postdata + ")");
+        },
+        save: function () {
+            var json = this.getInputData('form', 'submit');
+            $('#form').form('submit', {
+                url: "/operation/sysparameter/save",
+                data: json,
+                onSubmit: function () {
+                    return $(this).form('validate');
+                },
+                success: function (result) {
+                    var result = eval('(' + result + ')');
+                    manage.saveGrid();
+                    $.messager.show({
+                        title: '提示',
+                        msg: result.msg,
+                        timeout: 5000,
+                        showType: 'slide',
+                        fn: function () {
+                            if (result.msg.indexOf("成功") > 0) {
+
+                            }
+                        }
+                    });
+                }
+            });
+
+        }
+
+    }
+</script>

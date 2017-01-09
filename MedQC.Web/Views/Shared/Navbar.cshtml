@@ -1,0 +1,51 @@
+﻿@{
+    ViewBag.Title = "Navbar";
+    string menuname = MedQC.Web.Utility.CacheHelper.GetCache("menuname") as string;
+
+    if (string.IsNullOrEmpty(menuname))
+    {
+        menuname = "明天,杭州,气温,40度,啊";
+    }
+    string[] arrmenu = menuname.Split(',');
+}
+<div class="navbar">
+
+    <div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default navbar"
+         id="">
+        <ul class="am-navbar-nav am-cf am-avg-sm-4">
+            <li>
+                <a href="/" class="">
+                    <span class="am-icon-home"></span>
+                    <span class="am-navbar-label">@arrmenu[0]</span>
+                </a>
+            </li>
+            <li >
+                <a href="#" class="">
+                    <span class="am-icon-heart"></span>
+                    <span class="am-navbar-label">@arrmenu[1]</span>
+                </a>
+            </li>
+
+            <li >
+                <a href="/users/userinfo" class="">
+                    <span class="am-icon-hotel"></span>
+                    <span class="am-navbar-label">@arrmenu[2]</span>
+                </a>
+            </li>
+            <li>
+                <a href="/member/personalinfo" class="">
+                    <span class="am-icon-user"></span>
+                    <span class="am-navbar-label">@arrmenu[3]</span>
+                </a>
+            </li>
+            <li>
+                <a href="/blog/index" class="">
+                    <span class="am-icon-bold"></span>
+                    <span class="am-navbar-label">@arrmenu[4]</span>
+                </a>
+            </li>
+           
+
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "AA";
+    var s = ViewBag.Test;
+    s = "ddd";
+}
+
+<h2>AA</h2>
+
+<div>@s</div>
+
+@{
+    if (s == "aaa")
+    {
+        <div>hello world</div>
+    }
+    else
+    {
+        <div>hello world2</div>
+    }
+}

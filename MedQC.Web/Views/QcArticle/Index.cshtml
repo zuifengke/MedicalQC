@@ -1,0 +1,159 @@
+﻿@{
+    ViewBag.Title = "学习资料";
+    ViewBag.Description = "博客列表";
+    ViewBag.Keywords = "博客,blog,博客列表";
+    string mine = ViewBag.mine as string;
+    var pagination = ViewBag.Pagination as MedQC.Web.ViewsModels.Pagination;
+    var categoryCode = pagination.CategoryCode;
+    var categoryName = pagination.CategoryName;
+    var order = pagination.Order;
+    var myblogs = ViewBag.myblogs as List<MedQC.Web.Models.Meddoc.QcArticle>;
+    
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="icon" href="/logo.ico" type="image/x-icon" />
+
+<div class="am-container " id="main">
+
+    <div class="am-g am-g-fixed">
+        <div class="am-u-md-8">
+            <ol class="am-breadcrumb">
+                <li><a href="/index.html" class="am-icon-home">首页</a></li>
+                <li><a href="/@pagination.ActionUrl">学习资料</a></li>
+               
+                    <li class="am-active" href="/@pagination.ActionUrl?categorycode=@categoryCode">@categoryName</li>
+            </ol>
+            <div class="banner_navbg">
+                <div class="am-g">
+                    <div class="am-u-md-12">
+                        <div class="banner_nav am-fr">
+                            <span class="am-icon-caret-right">
+                                排序：
+                            </span>
+                            @if (string.IsNullOrEmpty(order) || order == "default")
+                            {
+                                <a class="banner_hover" href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=default">默认</a>
+                                <a href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=latest">最新</a>
+                                    <a href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=hot">最热</a>
+                            }
+                            else if (order == "latest")
+                            {
+                                <a href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=default">默认</a>
+                                <a class="banner_hover" href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=latest">最新</a>
+                                    <a href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=hot">最热</a>
+                            }
+                            else if (order == "hot")
+                            {
+                                <a href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=default">默认</a>
+                                <a href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=latest">最新</a>
+                                    <a class="banner_hover" href="/@pagination.ActionUrl?categorycode=@categoryCode&&order=hot">最热</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @if (myblogs != null)
+            {
+                foreach (var item in myblogs)
+                {
+                    <div class="inner-box blog-img">
+                        <div class="am-g">
+                            <div class="am-u-sm-3">
+                                <a class="blog-a-curse"  target="_blank" href="/qcarticle/view/@(new HtmlString(item.ID.ToString() + ".htm"))">
+                                    <img alt="" class="am_img animated" src="~/Content/images/amazeui/loading.gif" data-original="@item.ImagePath">
+                                </a>
+                            </div>
+                            <div class="am-u-sm-9">
+                                <div class="blog-header">
+                                    <a href="/@pagination.ActionUrl?categorycode=@item.CategoryCode" target="_blank" class="blog-category">@item.CategoryName</a>
+                                    <h2><a href="/qcarticle/view/@(new HtmlString(item.ID.ToString()+".htm"))" target="_blank">@item.Title</a></h2>
+                                </div>
+
+                                <p class="blog-ext">
+                                    <span class="blog-ext-ico">
+                                        <i class="am-icon-user  blog-ext-ico"></i>
+                                        @*@item.MemberName*@
+                                    </span>
+                                    <span class="blog-ext-ico"><i class="am-icon-clock-o  blog-ext-ico"></i>@item.ModifyTime.ToString("yyyy-MM-dd HH:mm")</span>
+                                    <span class="blog-ext-ico">
+                                        <i class="am-icon-eye  blog-ext-ico"></i>
+                                        @item.ViewCount
+                                    </span>
+                                </p>
+                                <p class="blog-content-show">
+                                    @item.Summary...
+                                </p>
+                                <span class="blog-keyword-show">@item.Keywords</span>
+                                @if (mine=="true")
+                                {
+                                    <div class="am-fr">
+                                        <button type="button" class="am-badge am-badge-danger am-round " onclick="deleteblog(@item.ID)">删除</button>
+                                        <button type="button" class="am-badge am-badge-success am-round " onclick="location.href='/blog/write/@item.ID'">修改</button>
+                                    </div>
+                                }
+                               
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+            <center>
+                @Html.Partial("_paginate")
+            </center>
+
+        </div>
+        <div class="am-u-md-4" id="my-side">
+
+            @Html.Partial("SideBox")
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+<div class="am-modal am-modal-confirm" tabindex="-1" id="bolg-delete-confirm">
+    <div class="am-modal-dialog">
+        <div class="am-modal-hd">警告！</div>
+        <div class="am-modal-bd">
+            您确定要删除这条记录吗？
+        </div>
+        <div class="am-modal-footer">
+            <span class="am-modal-btn" data-am-modal-cancel>取消</span>
+            <span class="am-modal-btn" data-am-modal-confirm>确定</span>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    function deleteblog(blogid) {
+        $('#bolg-delete-confirm').modal({
+            relatedTarget: this,
+            onConfirm: function (optons) {
+                location.href = "/blog/delete/" + blogid+"?mine=@mine&pageindex=@pagination.CurrentPageIndex";
+            },
+            onCancel: function () {
+            }
+        });
+    }
+    $(function () {
+        $(".blog-keyword-show").each(function () {
+            var ht = $(this).html();
+            $(this).html('');
+            if (ht != '' && ht != undefined && ht != ' ') {
+                var arr = ht.split(",");
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i].trim() != "") {
+                        $(this).append("<a class='tag' target='_blank' href='http://so.zyldingfang.com/search.aspx?q=" + arr[i] + "'>" + arr[i] + "</a>");
+                    }
+                }
+            }
+        })
+    });
+    $("img").lazyload({ effect: 'fadeIn' });
+</script>

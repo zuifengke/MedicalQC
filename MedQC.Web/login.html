@@ -1,0 +1,154 @@
+﻿<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <script src="Scripts/jquery-1.11.3.min.js"></script>
+    <script src="Scripts/jquery.backstretch.min.js"></script>
+    <link href="Scripts/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <script src="Scripts/bootstrap/js/bootstrap.min.js"></script>
+    <link href="Content/css/site.medqc.login.css" rel="stylesheet" />
+    <!--artDialog 引用-->
+    <script type="text/javascript" src="Scripts/artDialog/artDialog.source.js?skin=blue"></script>
+    <script type="text/javascript" src="Scripts/artDialog/artDialogExtend.js"></script>
+    <script type="text/javascript" src="Scripts/artDialog/plugins/iframeTools.source.js"></script>
+
+</head>
+<body>
+    <form id="form1">
+        <div class="page-lock">
+            <div class="page-logo">
+                <a class="brand" href="#">
+                    <img src="Content/images/medqc/logo-big.png" alt="logo" />
+                </a>
+            </div>
+            <div class="page-body">
+                <img class="page-lock-img" src="Content/images/medqc/profile/profile4.jpg" alt="" />
+                <div class="page-lock-info">
+                    <span class="space">
+                        &nbsp;
+                    </span>
+                    <span class="space">
+                        &nbsp;
+                    </span>
+                    <div class="input-group input-medium">
+                        用户名：<input type="text" class="form-control" onkeydown="enterLogin(); "  style="height:24px;" placeholder="请输入用户名" id="fm_Account" />
+                    </div>
+                    <div class="input-group input-medium">
+                        密&nbsp;&nbsp;&nbsp;&nbsp;码：<input type="password" onkeydown="enterLogin(); " class="form-control" style="height:24px;" placeholder="请输入密码" id="fm_Password" />
+                    </div>
+                    <span class="space">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn blue icn-only"  onclick="doLogin();return false;"><i class="m-icon-swapright m-icon-white">登录</i></button>
+                        </span>
+                    </span>
+
+                </div>
+            </div>
+            <div class="page-footer">
+                2009-2016&copy; 浙江和仁科技股份有限公司 版权所有
+            </div>
+        </div>
+    </form>
+</body>
+<script>
+        $(function () {
+            $.backstretch([
+                "Content/images/medqc/bg/1.jpg",
+                "Content/images/medqc/bg/2.jpg",
+                "Content/images/medqc/bg/3.jpg",
+                "Content/images/medqc/bg/4.jpg"
+            ], {
+                fade: 1000,
+                duration: 8000
+            });
+            $("#fm_Account").focus();
+        });
+
+        function showError(XMLHttpRequest, textStatus, errorThrown) {
+            if (XMLHttpRequest.status == 405) {
+                var timer;
+                top.art.dialog({
+                    lock: true,
+                    background: '#f7f7f7', // 背景色
+                    opacity: 0.87,	// 透明度
+                    content: '当前会话已过期，请重新登录！',
+                    init: function () {
+                        var that = this, i = 3;
+                        var fn = function () {
+                            that.title(i + '秒后跳转');
+                            !i && that.close();
+                            i--;
+                        };
+                        timer = setInterval(fn, 500);
+                        fn();
+                    },
+                    close: function () {
+                        clearInterval(timer);
+                        logout();
+                    }
+                }).show();
+            }
+            else {
+                var dialog = top.art.dialog({
+                    icon: 'error',
+                    title: errorThrown,
+                    content: XMLHttpRequest.responseText
+                });
+                dialog.show();
+            }
+        }
+        function enterLogin() {
+            var event = window.event || arguments.callee.caller.arguments[0];
+            if (event.keyCode == 13) {
+                doLogin();
+            }
+        }
+        function doLogin() {
+            var a;
+            $.ajax({
+                type: "POST",
+                async: false,
+                cache: false,
+                url: "/SysConfig/Account/Login",
+                dataType: "json",
+                data:
+                    {
+                        account: $("#fm_Account").val(),
+                        password: $("#fm_Password").val()
+                    },
+                beforeSend: function (XMLHttpRequest) {
+                    art.dialog.tips('正在登录......');
+                },
+                success: function (result) {
+                    $("#dvNotice").html(result.message);
+                    $("#dvNotice").css("color", "red");
+
+                    switch (result.status) {
+                        case "0":
+                            art.dialog.tips(result.message);
+                            break;
+                        case "1":
+                            art.dialog.tips("登录成功，正在为您加载系统首页，请稍候……");
+                            window.top.location.href = "/sysconfig";
+                            //var userAgent = window.navigator.userAgent.toLowerCase();
+                            //var msie6 = /msie 6\.0/i.test(userAgent);
+                            //var msie7 = /msie 7\.0/i.test(userAgent);
+                            //var msie8 = /msie 8\.0/i.test(userAgent);
+                            //var msie9 = /msie 9\.0/i.test(userAgent);
+                            //var msie10 = /msie 10\.0/i.test(userAgent);
+                            //if (msie6)
+                            //    window.top.location.href = 'Defaultie6.aspx';
+                            //else
+                            //    window.top.location.href = 'Default.aspx';
+                            break;
+                    }
+                },
+                complete: function (XMLHttpRequest, textStatus) {
+                    //隐藏正在执行时候的提示
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) { showError(XMLHttpRequest, textStatus, errorThrown); }
+            });
+        }
+
+</script>
+</html>

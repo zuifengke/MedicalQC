@@ -1,0 +1,48 @@
+﻿@using MedQC.Web;
+@{
+    string system = ViewBag.system != null ? (ViewBag.system as string) : MedQC.Web.Utility.CookieHelper.GetCookie("system") as string;
+
+    if (string.IsNullOrEmpty(system))
+    {
+        system = "医疗质量管理平台";
+    }
+    SiteConfig _siteConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration("~").GetSection("SiteConfig") as SiteConfig;
+}
+<header class="am-topbar am-topbar-inverse admin-header">
+    <div class="am-topbar-brand">
+        <strong>@_siteConfig.HospitalName</strong> <small>@System.Web.HttpUtility.UrlDecode(system)</small>
+    </div>
+    <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only" data-am-collapse="{target: '#topbar-collapse'}"><span class="am-sr-only">导航切换</span> <span class="am-icon-bars"></span></button>
+    <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+        <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list">
+            <li><a href="javascript:;"><span class="am-icon-envelope-o"></span> 收件箱 <span class="am-badge am-badge-warning">5</span></a></li>
+
+
+
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    <span class="am-icon-users"></span> 管理员 <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <li><a href="#"><span class="am-icon-user"></span> 资料</a></li>
+                    <li><a href="/medqc/home/config"><span class="am-icon-cog"></span> 设置</a></li>
+                    <li><a href="#"><span class="am-icon-power-off"></span> 退出</a></li>
+                </ul>
+            </li>
+            <li class="am-dropdown" data-am-dropdown>
+                <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                    <span class="am-icon-users"></span> 切换系统 <span class="am-icon-caret-down"></span>
+                </a>
+                <ul class="am-dropdown-content">
+                    <li><a href="/medqc/home/index?system=病案质量监控统计分析"><span class="am-icon-bar-chart"></span>病案质量监控统计分析</a></li>
+                    <li><a href="/medqc/home/index?system=医疗质量指标实时监控"><span class="am-icon-line-chart"></span>医疗质量指标实时监控</a></li>
+                    <li><a href="/medqc/home/index?system=医生辅助学习系统"><span class="am-icon-book"></span>医生辅助学习系统</a></li>
+                    <li><a href="/medqc/home/index?system=合理用药监测系统"><span class="am-icon-first-order"></span>合理用药监测系统</a></li>
+                    <li><a href="/medqc/home/index?system=不良事件上报系统"><span class="am-icon-flash"></span>不良事件上报系统</a></li>
+                    <li><a href="/operation/home/index?system=二次手术监测系统"><span class="am-icon-flash"></span>二次手术监测系统</a></li>
+                </ul>
+            </li>
+            <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"><span class="am-icon-arrows-alt"></span> <span class="admin-fullText">开启全屏</span></a></li>
+        </ul>
+    </div>
+</header>

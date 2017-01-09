@@ -1,0 +1,21 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    $(function () {
+
+        $.ajax({
+            url: "/Test/TestError", data: {  }, type: 'POST', dataType: 'text',
+            success: function (fn) {
+                alert(fn);
+                
+            },
+            error: function (xhr) {
+                alert('动态页有问题\nstatus：' + xhr.status + '\nresponseText：' + xhr.responseText)
+            }
+        });
+
+    });
+</script>
+

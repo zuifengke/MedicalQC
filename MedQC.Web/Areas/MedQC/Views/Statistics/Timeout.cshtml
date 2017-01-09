@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "全院前12个月超时率";
+    Layout = "~/Areas/MedQC/Views/Shared/_Layout.cshtml";
+    var rule = ViewBag.rule as MedQC.Web.Models.Meddoc.TimeRule;
+}
+
+    <!-- content start -->
+    <div class="admin-content">
+        <div class="admin-content-body">
+            <div class="am-cf am-padding">
+                <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">统计</strong> / <small>全院前12个月的超时率 </small></div>
+            </div>
+            
+            <div class="am-g">
+                <div class="am-u-sm-12">
+                    <div id="main" style="height:400px;width:900px;border:1px solid #ccc;padding:10px;">
+                      
+                    </div>
+
+                    <script src="~/Scripts/jquery-1.11.3.min.js"></script>
+                    <script src="//cdn.bootcss.com/echarts/3.1.9/echarts.min.js"></script>
+                    <script type="text/javascript">
+                        // Step:3 echarts & zrender as a Global Interface by the echarts-plain.js.
+                        // Step:3 echarts和zrender被echarts-plain.js写入为全局接口
+                        var myChart = echarts.init(document.getElementById('main'));
+                        $.get("/medqc/statistics/TimeoutData", function (data, textStatus) {
+                            var arrCount = new Array();
+                            var arrName = new Array();
+                            $(data).each(function () {
+                                arrCount.push(this.Count);
+                                arrName.push(this.Name);
+                            })
+                            var option = {
+                                title: {
+                                    text: '全院超时率',
+                                    subtext: '数据来自病案质控时效监控系统'
+                                },
+                                tooltip: {
+                                    trigger: 'axis'
+                                },
+                                legend: {
+                                    data: ['2015年']
+                                },
+                                toolbox: {
+                                    show: true,
+                                    feature: {
+                                        mark: { show: true },
+                                        dataView: { show: true, readOnly: false },
+                                        magicType: { show: true, type: ['line'] },
+                                        restore: { show: true },
+                                        saveAsImage: { show: true }
+                                    }
+                                },
+                                calculable: true,
+                                yAxis: [
+                                    {
+                                        type: 'value',
+                                        axisLabel: {
+                                            formatter: '{value} %'
+                                        },
+                                        boundaryGap: [0, 0.05]
+                                    }
+                                ],
+                                xAxis: [
+                                    {
+                                        type: 'category',
+                                        data: arrName
+                                    }
+                                ],
+                                series: [
+                                    {
+                                        name: '超时率',
+                                        type: 'line',
+                                        
+                                        data: arrCount
+                                    }
+                                ]
+                            };
+
+                            myChart.setOption(option);
+                        }
+                           );
+
+
+                    </script>
+                </div>
+            </div>
+           
+        </div>
+        @Html.Partial("_Footer")
+    </div>
+

@@ -1,0 +1,47 @@
+﻿@{
+    var position = "1";
+
+}
+<div class="admin-sidebar am-offcanvas" id="admin-offcanvas">
+    <div class="am-offcanvas-bar admin-offcanvas-bar">
+        <ul class="am-list admin-sidebar-list">
+            <li><a href="/medqc/home/index"><span class="am-icon-home"></span> 首页</a></li>
+            <li class="admin-parent">
+                <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-file"></span> 统计 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
+                <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
+                    <li>
+                        <a href="/medqc/statistics/timeout" class="am-cf">
+                            <span class="am-icon-line-chart am-fl am-margin-right admin-icon-red">
+                            </span> 全院前12个月超时率
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/medqc/statistics/deptranking">
+                            <span class="am-icon-bar-chart am-fl am-margin-right admin-icon-red"></span> 当月每个科室超时率排名
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/medqc/statistics/doctorranking">
+                            <span class="am-icon-bar-chart am-fl am-margin-right admin-icon-red"></span>  当月医生超时率排名
+                        </a>
+                    </li>
+
+                </ul>
+            </li>
+
+            <li><a href="#"><span class="am-icon-sign-out"></span> 注销</a></li>
+        </ul>
+        <div class="am-panel am-panel-default admin-sidebar-panel">
+            <div class="am-panel-bd">
+                <p><span class="am-icon-bookmark"></span> 公告</p>
+                <p</p>
+            </div>
+        </div>
+        <div class="am-panel am-panel-default admin-sidebar-panel">
+            <div class="am-panel-bd">
+                <p><span class="am-icon-tag"></span> wiki</p>
+                <p></p>
+            </div>
+        </div>
+    </div>
+</div>

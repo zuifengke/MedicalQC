@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Test";
+    //Layout = "~/Areas/Operation/Views/Shared/_Layout.cshtml";
+}
+
+<head>
+    <link href="~/Scripts/easyui/themes/bootstrap/easyui.css" rel="stylesheet" />
+    <script src="~/Scripts/easyui/jquery.min.js"></script>
+    <script src="~/Scripts/easyui/jquery.easyui.min.js"></script>
+</head>
+<div data-options="region:'center'">
+
+    <div id="tabs" class="easyui-tabs" style="width:500px;height:250px;">
+        <div title="Tab1" style="padding:20px;display:none;">
+            tab1
+        </div>
+        <div title="Tab2" data-options="closable:true" style="overflow:auto;padding:20px;display:none;">
+            tab2
+        </div>
+        <div title="Tab3" data-options="iconCls:'icon-reload',closable:true" style="display:none;">
+            tab3
+        </div>
+    </div>
+</div>
+
