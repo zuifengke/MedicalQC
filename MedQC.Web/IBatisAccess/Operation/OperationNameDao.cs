@@ -8,41 +8,41 @@ using MedQC.Web.Models;
 
 namespace MedQC.Web.IBatisAccess
 {
-    public class ScOperationDao:BaseDao
+    public class OperationNameDao:BaseDao
     {
         private const string databaseName = SystemConst.SqlMapperConfig.OperationSqlMapConfig;
 
-        private static ScOperationDao m_Instance = null;
+        private static OperationNameDao m_Instance = null;
 
         /// <summary>
         /// 获取系统运行上下文实例
         /// </summary>
-        public static ScOperationDao Instance
+        public static OperationNameDao Instance
         {
             get
             {
                 if (m_Instance == null)
-                    m_Instance = new ScOperationDao();
-                return ScOperationDao.m_Instance;
+                    m_Instance = new OperationNameDao();
+                return OperationNameDao.m_Instance;
             }
         }
-        public IList<ScOperation> GetReturnRoom()
+        public IList<OperationName> GetOperationNames(OperationName operationName)
         {
             Hashtable hashTable = new Hashtable();
-            //hashTable.Add("ID", ID);
-            string sql = IBatisHelper.GetRuntimeSql(base.GetSqlMapper(databaseName), "Operation.ScOperation.GetReturnRoom", hashTable);
-            var reValue =base.GetSqlMapper(databaseName).QueryForList<ScOperation>("Operation.ScOperation.GetReturnRoom", hashTable);
-            logger.Debug("ScOperation:" + (reValue == null ? 0 : reValue.Count));
+            hashTable.Add("operationName", operationName);
+            string sql = IBatisHelper.GetRuntimeSql(base.GetSqlMapper(databaseName), "Operation.OperationName.GetOperationNames", hashTable);
+            var reValue =base.GetSqlMapper(databaseName).QueryForList<OperationName>("Operation.OperationName.GetOperationNames", hashTable);
+          
             return reValue;
         }
 
-        public IList<ScOperation> QueryForEvaluation(string PATIENT_ID,int VISIT_ID)
+        public IList<OperationName> QueryForEvaluation(string PATIENT_ID,int VISIT_ID)
         {
             Hashtable hashTable = new Hashtable();
             hashTable.Add("PATIENT_ID", PATIENT_ID);
             hashTable.Add("VISIT_ID", VISIT_ID);
-            string sql = IBatisHelper.GetRuntimeSql(base.GetSqlMapper(databaseName), "Operation.ScOperation.QueryForEvaluation", hashTable);
-            var reValue = base.GetSqlMapper(databaseName).QueryForList<ScOperation>("Operation.ScOperation.QueryForEvaluation", hashTable);
+            string sql = IBatisHelper.GetRuntimeSql(base.GetSqlMapper(databaseName), "Operation.OperationName.QueryForEvaluation", hashTable);
+            var reValue = base.GetSqlMapper(databaseName).QueryForList<OperationName>("Operation.OperationName.QueryForEvaluation", hashTable);
             return reValue;
         }
         public SysMenu QueryOne(int ID)
@@ -65,11 +65,11 @@ namespace MedQC.Web.IBatisAccess
             return reValue.ToList();
         }
 
-        public bool Insert(ScOperation item)
+        public bool Insert(OperationName item)
         {
             try
             {
-                var result = base.GetSqlMapper(databaseName).Insert("Operation.ScOperation.Insert", item);
+                var result = base.GetSqlMapper(databaseName).Insert("Operation.OperationName.Insert", item);
                //SysMenu.ID = int.Parse(result.ToString());
                 return true;
             }

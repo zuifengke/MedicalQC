@@ -2,7 +2,10 @@
     ViewBag.Title = "Index";
     Layout = "~/Areas/Operation/Views/Shared/_Layout.cshtml";
 }
-
+<style>
+    .panel-title { text-align:center;}
+    .dialog-button { text-align:center;}
+</style>
 <body>
 
     <form id="form_list" name="form_list" method="post">
@@ -36,16 +39,61 @@
             </div>
         </div>
     </form>
-    <div id="dialog" class="easyui-dialog" title="非计划二次手术评审表" style="width: 800px; height: 480px;"
+    <div id="dialog" class="easyui-dialog " title="非计划二次手术评审表" style="width: 1000px; height: 480px;background-color: rgb(245, 249, 253);"
          modal="true" closed="true" buttons="#dialog-buttons" maximizable="true" resizable="true">
 
         <form id="form" class="easyui-form" method="post">
-            <div style="padding:5px 10px 0 10px;">
-                <input class="easyui-textbox" name="Name" style="width:100%" data-options="label:'病区名称：',required:true">
+            <div class="form-row">
+                <input class="easyui-textbox" name="WARD_NAME" style="width:25%" data-options="label:'病区名称：',readonly:true">
+                <input class="easyui-textbox" name="NAME" style="width:25%" data-options="label:'病人姓名：',readonly:true">
+                <input class="easyui-textbox" name="SEX" style="width:25%" data-options="label:'性别：',readonly:true">
+                <input class="easyui-textbox" name="AGE" style="width:20%" data-options="label:'年龄：',readonly:true">
+            </div>
+            <div class="form-row">
+                <input class="easyui-textbox" name="PATIENT_ID" style="width:25%" data-options="label:'病人ID号:',readonly:true">
+                <input class="easyui-textbox" name="OPERATION_NO" style="width:25%" data-options="label:'手术次数:',readonly:true">
+                <input class="easyui-textbox" name="INPDAYS" style="width:25%" data-options="label:'住院天数:',readonly:true">
+                <input class="easyui-textbox" name="ATTENDING_DOCTOR" style="width:20%" data-options="label:'主诊医生:',readonly:true">
+            </div>
+
+            <div class="form-row">
+                <input class="easyui-textbox" name="SURGEON" style="width:25%" data-options="label:'主刀医师:',readonly:true">
+                <input class="easyui-textbox" name="COST" style="width:25%" data-options="label:'医疗费用(元)： ',readonly:true,labelWidth:120">
+                <input class="easyui-textbox" name="PATIENT_STATUS" style="width:35%" data-options="label:'患者目前状态：',readonly:false,labelWidth:120,required:true">
+            </div>
+
+            <div class="form-row">
+                <input class="easyui-textbox" name="COMPLICATION" style="width:25%" data-options="label:'并发症：',readonly:true">
+                <input class="easyui-datebox" name="COMPLICATION_START_DATE" style="width:25%" data-options="label:'并发症发生时间：',readonly:false,labelWidth:120">
+                <input class="easyui-datebox" name="COMPLICATION_DEAL_DATE" style="width:25%" data-options="label:'并发症处理时间：',readonly:false,labelWidth:120,required:true">
+            </div>
+            <div class="form-row">
+                <div style="width:100px;float:left"><label >主要诊断：</label></div> 
+                <input class="easyui-textbox" name="DIAGNOSIS1" style="width:25%" data-options="label:'',readonly:false">
+                <input class="easyui-textbox" name="DIAGNOSIS2" style="width:25%" data-options="label:'',readonly:false">
+                <input class="easyui-textbox" name="DIAGNOSIS3" style="width:25%" data-options="label:'',readonly:false">
+            </div>
+            <div class="form-row">
+                <div style="width:100px;float:left"><label>手术名称：</label></div>
+                <input class="easyui-textbox" name="OPERATIONNAME1" style="" data-options="label:'',readonly:false">
+                @*<input class="easyui-textbox" name="OPERATIONNAME2" style="width:25%" data-options="label:'',readonly:false">
+                <input class="easyui-textbox" name="OPERATIONNAME3" style="width:25%" data-options="label:'',readonly:false">*@
+            </div>
+            <div class="form-row">
+                <input class="easyui-textbox" name="PROJECTINFO" style="width:70%" data-options="label:'目前治疗方案：',readonly:false,labelWidth:120">
             </div>
             <div style="padding:5px 10px 0 10px;">
-                <input class="easyui-textbox" name="Description" style="width:100%" data-options="label:'备注:'">
+                <select id="PROJECTINFO" class="easyui-combobox" data-options="label:'是否二次手术：',readonly:false,labelWidth:120" name="PROJECTINFO" style="width:250px;">
+                    <option value="0">否</option>
+                    <option value="1">是</option>
+                    
+                </select>
             </div>
+            <div style="padding:5px 10px 0 10px;">
+                <input class="easyui-textbox" name="REASON2" data-options="multiline:true,label:'非二次手术原因：',labelWidth:120"  style="width:800px;height:100px;">
+            </div>
+
+
         </form>
     </div>
     <div id="dialog-buttons">
@@ -61,6 +109,7 @@
                     //$("#datagrid").datagrid("reload");
                 }
             });
+
         });
         var url;
         var manage = {
@@ -92,11 +141,14 @@
                 if (row) {
                     $('#dialog').dialog('open').dialog('center').dialog('setTitle', '非计划二次手术评审表');
                     $("#form1").form("clear");
-                    //$.post("/sysconfig/sysRole/GetDetail", { "id": row.ID }, function (data) {
-                    //    $("#form").form('load', data);
-                    //});
+                    
+                    $.post("/operation/ReturnRoom/QueryEvaluation", { "PATIENT_ID": row.PATIENT_ID, "VISIT_ID": row.VISIT_ID }, function (data) {
+                        $("#form").form('load', data);
+                    });
                     //url = '/sysconfig/sysRole/update?id=' + row.ID;
                 }
+                else
+                    $("#dialog").dialog("open");
             },
             save: function () {
                 var json = this.getInputData('edit', 'submit');
@@ -227,7 +279,6 @@
                     sortName: 'ID', //排序字段
                     idField: 'ID', //标识字段,主键
                     iconCls: '', //标题左边的图标
-                    
                     width: '100%', //宽度
                     singleSelect: true,
                     height: $(parent.document).find("#tabs").height() - 30 > 0 ? $(parent.document).find("#tabs").height() - 30 : 300, //高度
@@ -301,7 +352,6 @@
                     toolbar: "#toolbar",
                     queryParams: { "action": "query" },
                     onLoadSuccess: function (data) {
-                        
                         manage.mergeCellsByField("datagrid", "PATIENT_ID,VISIT_ID,NAME,DEPT_NAME,SEX,AGE,MAIN_DIAGNOSIS", 0, 1);
                     },
                     rownumbers: true //行号

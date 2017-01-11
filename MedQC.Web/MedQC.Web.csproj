@@ -306,6 +306,8 @@
     <Compile Include="DataAccess\System\RoleMenuRepository.cs" />
     <Compile Include="Filters\MyExceptionAttribute.cs" />
     <Compile Include="Filters\MyOutputCacheAttribute.cs" />
+    <Compile Include="IBatisAccess\Operation\OperationNameDao.cs" />
+    <Compile Include="Models\Operation\OperationName.cs" />
     <Compile Include="Utility\Helpers\EmailGateway.cs" />
     <Compile Include="Utility\Helpers\SendMail.cs" />
     <Compile Include="Utility\Helpers\SendMailHelper.cs" />
@@ -1940,6 +1942,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Operation\Views\SuspectedReturn\Index.cshtml" />
+    <Content Include="Maps\Operation\OperationNameMap.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Scripts\jquery-1.11.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.11.3.js" />
     <Content Include="Scripts\jquery-1.11.3.min.js" />
@@ -2813,7 +2818,7 @@
     <Content Include="Areas\MedQC\Views\Shared\Advert.cshtml" />
     <Content Include="Areas\MedQC\Views\QcArticle\Index.cshtml" />
     <Content Include="Areas\MedQC\Views\Shared\_SideBar2.cshtml" />
-    <None Include="Properties\PublishProfiles\120.26.224.22-web2.pubxml" />
+    <None Include="Properties\PublishProfiles\192.168.86.128-medqc.pubxml" />
     <None Include="Properties\PublishProfiles\211.149.149.117-web2.pubxml" />
     <None Include="Properties\PublishProfiles\43.277.192.236-web3.pubxml" />
     <None Include="Properties\PublishProfiles\zyldingfang.pubxml" />

@@ -91,11 +91,28 @@ namespace MedQC.Web.Models
         #region 扩展属性，不存数据库
         public string WARD_NAME { get; set; }
         public string NAME { get; set; }
-        public string PATIENT_SEX { get; set; }
-        public string INPDAYS { get; set; }
+        public string SEX { get; set; }
+        public int AGE { get; set; }
+        /// <summary>
+        /// 住院天数
+        /// </summary>
+        public int INPDAYS { get; set; }
+        /// <summary>
+        /// 主诊医生 
+        /// </summary>
         public string ATTENDING_DOCTOR { get; set; }
-
-
+        /// <summary>
+        /// 第一术者 主刀医师
+        /// </summary>
+        public string SURGEON { get; set; }
+        /// <summary>
+        /// 手术并发症
+        /// </summary>
+        public string COMPLICATION { get; set; }
+        /// <summary>
+        /// 医疗费用
+        /// </summary>
+        public decimal COST { get; set; }
         #endregion
     }
 }

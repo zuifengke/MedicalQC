@@ -81,7 +81,7 @@ namespace MedQC.Web.Models
         /// </summary>
         public string CONTINUED_TIMESPAN { get; set; }
         /// <summary>
-        /// 第一术者
+        /// 第一术者 主刀医师
         /// </summary>
         public string SURGEON { get; set; }
         /// <summary>
