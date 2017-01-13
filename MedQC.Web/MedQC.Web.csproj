@@ -307,6 +307,7 @@
     <Compile Include="Filters\MyExceptionAttribute.cs" />
     <Compile Include="Filters\MyOutputCacheAttribute.cs" />
     <Compile Include="IBatisAccess\Operation\OperationNameDao.cs" />
+    <Compile Include="Models\Operation\Diagnosis.cs" />
     <Compile Include="Models\Operation\OperationName.cs" />
     <Compile Include="Utility\Helpers\EmailGateway.cs" />
     <Compile Include="Utility\Helpers\SendMail.cs" />
